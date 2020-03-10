@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import { addLog } from '../../actions/logActions';
+
 import M from 'materialize-css/dist/js/materialize.min.js';
 
-const AddLogModal = () => {
+const AddLogModal = ({ addLog }) => {
     const [message, setMessage] = useState('');
     const [attention, setAttention] = useState(false);
     const [tech, setTech] = useState('');
@@ -10,7 +13,15 @@ const AddLogModal = () => {
         if(message === '' || tech === '') {
             M.toast({ html: 'Please enter a message and tech'})
         } else {
-            console.log(message, tech, attention);
+            const newLog = {
+                message,
+                attention,
+                tech,
+                date: new Date()
+            }
+            addLog(newLog);
+            M.toast({html: `Log added by ${tech}`})
+
             //Clear Fields
             setMessage('');
             setTech('');
@@ -32,12 +43,13 @@ const AddLogModal = () => {
                 </div>
                 <div className="row">
                     <div className="input-field">
-                        <select className="browser-default" name="tech" value={tech} onChange={e => setTech(e.target.value)}></select>
-                        <option value="" disabled>Select Technician</option>
-                        <option value="Johnny" disabled>Select Technician</option>
-                        <option value="Blake" disabled>Select Technician</option>
-                        <option value="Sam" disabled>Select Technician</option>
-                        <option value="Sara" disabled>Select Technician</option>
+                        <select className="browser-default" name="tech" value={tech} onChange={e => setTech(e.target.value)}>
+                            <option value="" disabled>Select Technician</option>
+                            <option value="Johnny" >Johnny</option>
+                            <option value="Blake" >Blake</option>
+                            <option value="Sam" >Sam</option>
+                            <option value="Sara" >Sara</option>
+                        </select>
                     </div>
                 </div>
                 <div className="row">
@@ -68,4 +80,4 @@ const modalStyle = {
     height: "75%",
 }
 
-export default AddLogModal;
+export default connect(null, { addLog })(AddLogModal);
